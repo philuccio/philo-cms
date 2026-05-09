@@ -1,11 +1,30 @@
 {
-  "extends": "@philo/config/typescript/nextjs",
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["ES2017", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "moduleDetection": "force",
+    "plugins": [{ "name": "next" }],
+    "jsx": "preserve",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "incremental": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@philo/ui": ["../../packages/ui/src/index.ts"],
       "@philo/types": ["../../packages/types/src/index.ts"]
     }
-  }
+  },
+  "include": ["src", "next-env.d.ts", "next.config.ts", "*.ts", "*.tsx"],
+  "exclude": ["node_modules"]
 }
