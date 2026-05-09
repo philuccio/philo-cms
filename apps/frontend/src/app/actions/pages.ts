@@ -159,3 +159,19 @@ export async function moveBlock(id: string, direction: 'up' | 'down') {
 
   revalidatePath(`/admin/pages/${block.pageId}`)
 }
+
+export async function reorderBlocks(pageId: string, orderedIds: string[]) {
+  const session = await auth()
+  if (!session?.user) throw new Error('Non autorizzato')
+
+  const page = await prisma.page.findFirst({ where: { id: pageId, siteId: session.user.siteId } })
+  if (!page) throw new Error('Pagina non trovata')
+
+  await prisma.$transaction(
+    orderedIds.map((id, index) =>
+      prisma.layoutBlock.update({ where: { id }, data: { order: index } }),
+    ),
+  )
+
+  revalidatePath(`/admin/pages/${pageId}`)
+}

@@ -5,9 +5,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import {
   IconPlus,
-  IconTrash,
-  IconChevronUp,
-  IconChevronDown,
   IconDeviceFloppy,
   IconChevronLeft,
   IconEye,
@@ -15,7 +12,14 @@ import {
 } from '@tabler/icons-react'
 import type { Page, LayoutBlock } from '@prisma/client'
 import type { BlockType, BlockContent } from '@philo/types'
-import { addBlock, updateBlock, deleteBlock, moveBlock, updatePageMeta } from '@/app/actions/pages'
+import {
+  addBlock,
+  updateBlock,
+  deleteBlock,
+  reorderBlocks,
+  updatePageMeta,
+} from '@/app/actions/pages'
+import { SortableBlockList } from './SortableBlockList'
 import { HeroEditor } from './blocks/HeroEditor'
 import { TextEditor } from './blocks/TextEditor'
 import { ImageEditor } from './blocks/ImageEditor'
@@ -112,13 +116,13 @@ export function PageEditor({ page }: Props) {
     })
   }
 
-  const handleMove = (id: string, dir: 'up' | 'down') => {
+  const handleReorder = (orderedIds: string[]) => {
     startTransition(async () => {
       try {
-        await moveBlock(id, dir)
+        await reorderBlocks(page.id, orderedIds)
         router.refresh()
       } catch {
-        toast.error('Errore spostamento blocco')
+        toast.error('Errore riordinamento blocchi')
       }
     })
   }
@@ -203,60 +207,21 @@ export function PageEditor({ page }: Props) {
           <span className="truncate text-sm font-medium text-[--color-text]">{page.title}</span>
         </div>
 
-        <div className="flex-1 space-y-1 overflow-y-auto p-3">
-          {page.blocks.length === 0 && (
+        <div className="flex-1 overflow-y-auto p-3">
+          {page.blocks.length === 0 ? (
             <p className="text-[--color-text]/30 py-8 text-center text-xs">
               Nessun blocco. Aggiungine uno.
             </p>
+          ) : (
+            <SortableBlockList
+              blocks={page.blocks}
+              selectedId={selectedId}
+              isPending={isPending}
+              onSelect={setSelectedId}
+              onDelete={handleDelete}
+              onReorder={handleReorder}
+            />
           )}
-          {page.blocks.map((block, idx) => (
-            <div
-              key={block.id}
-              onClick={() => setSelectedId(block.id)}
-              className={`group flex cursor-pointer items-center gap-2 rounded px-3 py-2 text-sm transition-colors ${
-                selectedId === block.id
-                  ? 'bg-[--color-accent]/15 text-[--color-accent]'
-                  : 'hover:bg-[--color-text]/5 text-[--color-text]/70'
-              }`}
-            >
-              <span className="flex-1 truncate">{BLOCK_LABELS[block.type as BlockType]}</span>
-              <span className="flex shrink-0 gap-0.5 opacity-0 group-hover:opacity-100">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleMove(block.id, 'up')
-                  }}
-                  disabled={idx === 0 || isPending}
-                  className="p-0.5 hover:text-[--color-text] disabled:opacity-20"
-                  aria-label="Sposta su"
-                >
-                  <IconChevronUp size={13} />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleMove(block.id, 'down')
-                  }}
-                  disabled={idx === page.blocks.length - 1 || isPending}
-                  className="p-0.5 hover:text-[--color-text] disabled:opacity-20"
-                  aria-label="Sposta giù"
-                >
-                  <IconChevronDown size={13} />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDelete(block.id)
-                  }}
-                  disabled={isPending}
-                  className="p-0.5 hover:text-red-400 disabled:opacity-20"
-                  aria-label="Elimina"
-                >
-                  <IconTrash size={13} />
-                </button>
-              </span>
-            </div>
-          ))}
         </div>
 
         {/* Aggiungi blocco */}
