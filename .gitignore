@@ -29,5 +29,6 @@ pnpm-debug.log*
 prisma/migrations/
 !prisma/migrations/.gitkeep
 
-# uploads (media locale dev)
-public/uploads/
+# uploads (media locale — file caricati non in git)
+public/uploads/*
+!public/uploads/.gitkeep
