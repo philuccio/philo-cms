@@ -1,9 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /*
   Tema PHILO — valori di default (Dark Luxury).
   Questi vengono sovrascritti a runtime dal ThemeProvider
   con i valori salvati nel DB per il sito corrente.
+  Il pannello admin supporta anche light mode via [data-theme="light"].
 */
 @theme {
   --color-primary: #0a0a0a;
@@ -12,12 +13,21 @@
   --color-bg: #0a0a0a;
   --color-text: #f5f2ed;
 
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
 
   --spacing-section: 6rem;
   --spacing-container: 1.5rem;
   --radius-card: 0.5rem;
+}
+
+/* Admin light mode override */
+[data-theme='light'] {
+  --color-primary: #f5f2ed;
+  --color-secondary: #0a0a0a;
+  --color-accent: #b8962e;
+  --color-bg: #f2f0ec;
+  --color-text: #1a1a1e;
 }
 
 /* Base */
@@ -40,7 +50,12 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   line-height: 1.2;
 }
