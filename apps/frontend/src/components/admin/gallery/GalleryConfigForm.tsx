@@ -10,6 +10,7 @@ import { saveGalleryConfig } from '@/app/actions/gallery'
 const LAYOUTS = [
   { value: 'GRID', label: 'Grid uniforme', desc: 'Griglia con colonne fisse' },
   { value: 'MASONRY', label: 'Masonry', desc: 'Colonne con altezze variabili' },
+  { value: 'BENTO_GRID', label: 'Bento Grid', desc: 'Card di dimensioni miste stile dashboard' },
   { value: 'FULLWIDTH', label: 'Full-width alternato', desc: 'Immagine + testo alternati' },
   { value: 'FILMSTRIP', label: 'Filmstrip', desc: 'Scroll orizzontale' },
 ]
@@ -23,7 +24,12 @@ export function GalleryConfigForm({ config }: Props) {
   const [isPending, startTransition] = useTransition()
 
   const [form, setForm] = useState({
-    layoutType: (config?.layoutType ?? 'GRID') as 'GRID' | 'MASONRY' | 'FULLWIDTH' | 'FILMSTRIP',
+    layoutType: (config?.layoutType ?? 'GRID') as
+      | 'GRID'
+      | 'MASONRY'
+      | 'FULLWIDTH'
+      | 'FILMSTRIP'
+      | 'BENTO_GRID',
     cols: config?.cols ?? 3,
     hasFilters: config?.hasFilters ?? true,
     hasLightbox: config?.hasLightbox ?? true,
@@ -71,12 +77,12 @@ export function GalleryConfigForm({ config }: Props) {
         </div>
       </div>
 
-      {/* Colonne (solo per GRID) */}
-      {form.layoutType === 'GRID' && (
+      {/* Colonne (Grid e Masonry) */}
+      {(form.layoutType === 'GRID' || form.layoutType === 'MASONRY') && (
         <div>
           <p className="mb-3 text-sm font-medium text-[--color-text]">Numero colonne</p>
           <div className="flex gap-2">
-            {[2, 3, 4].map((n) => (
+            {[2, 3, 4, 5, 6].map((n) => (
               <button
                 key={n}
                 onClick={() => setForm((f) => ({ ...f, cols: n }))}

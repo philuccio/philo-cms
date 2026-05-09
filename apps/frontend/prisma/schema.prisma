@@ -34,6 +34,7 @@ enum GalleryLayout {
   MASONRY
   FULLWIDTH
   FILMSTRIP
+  BENTO_GRID
 }
 
 enum Depth {
