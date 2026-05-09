@@ -12,10 +12,10 @@ export const useUIStore = create<UIStore>()(
   persist(
     (set) => ({
       sidebarCollapsed: false,
-      darkMode: true,
+      darkMode: false,
       toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
       toggleDarkMode: () => set((s) => ({ darkMode: !s.darkMode })),
     }),
-    { name: 'philo-ui' },
+    { name: 'philo-ui-v2' },
   ),
 )

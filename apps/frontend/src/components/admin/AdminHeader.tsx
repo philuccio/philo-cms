@@ -23,7 +23,7 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
       .join('') ?? 'A'
 
   return (
-    <header className="border-[--color-text]/10 flex h-14 flex-shrink-0 items-center gap-4 border-b bg-[--color-bg] px-6">
+    <header className="border-[--color-text]/10 flex h-14 flex-shrink-0 items-center gap-4 border-b bg-[--color-sidebar] px-6">
       {/* Search */}
       <div className="border-[--color-text]/10 bg-[--color-text]/5 text-[--color-text]/40 focus-within:border-[--color-accent]/50 flex flex-1 items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors focus-within:text-[--color-text]">
         <IconSearch size={15} stroke={1.5} />
@@ -65,7 +65,7 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
           {userMenuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-              <div className="border-[--color-text]/10 absolute right-0 top-10 z-20 w-52 rounded-lg border bg-[--color-bg] py-1 shadow-xl">
+              <div className="border-[--color-text]/10 absolute right-0 top-10 z-20 w-52 rounded-lg border bg-[--color-sidebar] py-1 shadow-xl">
                 <div className="border-[--color-text]/10 border-b px-4 py-2.5">
                   <p className="truncate text-sm font-medium text-[--color-text]">{userName}</p>
                   <p className="text-[--color-text]/40 text-xs">{userRole}</p>

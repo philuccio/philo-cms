@@ -11,6 +11,7 @@
   --color-secondary: #f5f2ed;
   --color-accent: #c9a84c;
   --color-bg: #0a0a0a;
+  --color-sidebar: #111110;
   --color-text: #f5f2ed;
 
   --font-display: 'Cormorant Garamond', Georgia, serif;
@@ -23,11 +24,12 @@
 
 /* Admin light mode override */
 [data-theme='light'] {
-  --color-primary: #f5f2ed;
-  --color-secondary: #0a0a0a;
-  --color-accent: #b8962e;
-  --color-bg: #f2f0ec;
-  --color-text: #1a1a1e;
+  --color-primary: #f7f5f0;
+  --color-secondary: #1c1a17;
+  --color-accent: #a07c20;
+  --color-bg: #f7f5f0;
+  --color-sidebar: #dedad3;
+  --color-text: #1c1a17;
 }
 
 /* Base */

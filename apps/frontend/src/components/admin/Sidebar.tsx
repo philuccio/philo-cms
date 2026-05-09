@@ -42,7 +42,7 @@ export function Sidebar({ userName }: SidebarProps) {
 
   return (
     <aside
-      className={`border-[--color-text]/10 relative flex h-screen flex-shrink-0 flex-col border-r bg-[--color-bg] transition-all duration-200 ${
+      className={`border-[--color-text]/10 relative flex h-screen flex-shrink-0 flex-col border-r bg-[--color-sidebar] transition-all duration-200 ${
         sidebarCollapsed ? 'w-14' : 'w-52'
       }`}
     >
@@ -89,7 +89,7 @@ export function Sidebar({ userName }: SidebarProps) {
       <button
         onClick={toggleSidebar}
         title={sidebarCollapsed ? 'Espandi sidebar' : 'Riduci sidebar'}
-        className="border-[--color-text]/15 text-[--color-text]/40 absolute -right-3 top-16 flex h-6 w-6 items-center justify-center rounded-full border bg-[--color-bg] transition-colors hover:text-[--color-text]"
+        className="border-[--color-text]/15 text-[--color-text]/40 absolute -right-3 top-16 flex h-6 w-6 items-center justify-center rounded-full border bg-[--color-sidebar] transition-colors hover:text-[--color-text]"
       >
         {sidebarCollapsed ? <IconChevronRight size={12} /> : <IconChevronLeft size={12} />}
       </button>
