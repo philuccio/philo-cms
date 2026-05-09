@@ -1,8 +1,17 @@
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { compare } from 'bcryptjs'
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { prisma } from './prisma'
+import type { Role } from '@philo/types'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: 'jwt' },
+  pages: {
+    signIn: '/admin/login',
+    error: '/admin/login',
+  },
   providers: [
     Credentials({
       credentials: {
@@ -10,47 +19,55 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) return null
+        const email = credentials?.email as string | undefined
+        const password = credentials?.password as string | undefined
+
+        if (!email || !password) return null
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email as string },
+          where: { email },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            password: true,
+            role: true,
+            siteId: true,
+          },
         })
 
         if (!user) return null
 
-        // bcrypt compare viene implementato nello step 1.3
-        // placeholder per ora
-        const { compare } = await import('bcryptjs')
-        const valid = await compare(credentials.password as string, user.password)
+        const valid = await compare(password, user.password)
         if (!valid) return null
 
         return {
           id: user.id,
           email: user.email,
           name: user.name ?? undefined,
-          role: user.role,
+          role: user.role as Role,
+          siteId: user.siteId,
         }
       },
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
-        token['role'] = (user as typeof user & { role: string }).role
-        token['id'] = user.id
+        const u = user as typeof user & { role: Role; siteId: string }
+        token.role = u.role
+        token.siteId = u.siteId
+        token.id = u.id
       }
       return token
     },
-    session({ session, token }) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = token['id'] as string
-        ;(session.user as typeof session.user & { role: string }).role = token['role'] as string
+        session.user.id = token.id as string
+        session.user.role = token.role as Role
+        session.user.siteId = token.siteId as string
       }
       return session
     },
   },
-  pages: {
-    signIn: '/admin/login',
-  },
-  session: { strategy: 'jwt' },
 })

@@ -6,7 +6,11 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "moduleDetection": "force",
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "jsx": "preserve",
     "strict": true,
     "noUncheckedIndexedAccess": true,
@@ -25,6 +29,6 @@
       "@philo/types": ["../../packages/types/src/index.ts"]
     }
   },
-  "include": ["src", "next-env.d.ts", "next.config.ts", "*.ts", "*.tsx"],
+  "include": ["*.ts", "*.tsx", "next-env.d.ts", "next.config.ts", "src", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

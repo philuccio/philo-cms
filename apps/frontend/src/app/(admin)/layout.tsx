@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { SessionProvider } from 'next-auth/react'
 
 export const metadata: Metadata = {
   title: {
@@ -9,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-[--color-bg]">
-      {children}
-    </div>
+    <SessionProvider>
+      <div className="flex min-h-screen bg-[--color-bg]">{children}</div>
+    </SessionProvider>
   )
 }

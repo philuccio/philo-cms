@@ -8,9 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '*.amazonaws.com' },
     ],
   },
-  experimental: {
-    typedRoutes: true,
-  },
+  typedRoutes: true,
 }
 
 export default nextConfig

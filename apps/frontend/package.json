@@ -13,6 +13,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
     "@philo/types": "workspace:*",
     "@philo/ui": "workspace:*",
     "@prisma/client": "^6.2.1",
