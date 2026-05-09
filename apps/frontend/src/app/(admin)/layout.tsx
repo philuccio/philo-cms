@@ -9,9 +9,5 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <SessionProvider>
-      <div className="flex min-h-screen bg-[--color-bg]">{children}</div>
-    </SessionProvider>
-  )
+  return <SessionProvider>{children}</SessionProvider>
 }
