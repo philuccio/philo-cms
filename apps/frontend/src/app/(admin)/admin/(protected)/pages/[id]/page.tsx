@@ -1,12 +1,27 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { getPage } from '@/app/actions/pages'
+import { PageEditor } from '@/components/admin/pages/PageEditor'
+
 interface Props {
   params: Promise<{ id: string }>
 }
 
-export default async function AdminPageEditor({ params }: Props) {
+export const metadata: Metadata = { title: 'Editor pagina' }
+
+export default async function AdminPageEditorPage({ params }: Props) {
   const { id } = await params
+  let page = null
+  try {
+    page = await getPage(id)
+  } catch {
+    // auth error during pre-render
+  }
+  if (!page) notFound()
+
   return (
-    <div className="p-8">
-      <h1 className="ph-heading-md">Editor Pagina — {id}</h1>
+    <div className="h-full">
+      <PageEditor page={page} />
     </div>
   )
 }
