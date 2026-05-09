@@ -1,0 +1,296 @@
+// ■■■ Datasource & Generator ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ■■■ Enums ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum Status {
+  DRAFT
+  REVIEW
+  PUBLISHED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum GalleryLayout {
+  GRID
+  MASONRY
+  FULLWIDTH
+  FILMSTRIP
+}
+
+enum Depth {
+  THUMBNAIL
+  CARD
+  FULL
+}
+
+enum ServiceLevel {
+  L1_CARD
+  L2_PAGE
+  L3_PACKAGE
+}
+
+// ■■■ Site ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Site {
+  id        String   @id @default(cuid())
+  name      String
+  domain    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  theme         Theme?
+  users         User[]
+  pages         Page[]
+  projects      Project[]
+  caseHistories CaseHistory[]
+  services      Service[]
+  media         Media[]
+  galleryConfig GalleryConfig?
+  categories    Category[]
+}
+
+// ■■■ User ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(EDITOR)
+  siteId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id])
+
+  @@index([siteId])
+}
+
+// ■■■ Theme ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Theme {
+  id             String   @id @default(cuid())
+  siteId         String   @unique
+  primaryColor   String   @default("#0a0a0a")
+  secondaryColor String   @default("#f5f2ed")
+  accentColor    String   @default("#c9a84c")
+  bgColor        String   @default("#ffffff")
+  textColor      String   @default("#1c1c1c")
+  fontDisplay    String   @default("Cormorant Garamond")
+  fontBody       String   @default("DM Sans")
+  presetName     String?
+  customCss      String?  @db.Text
+  updatedAt      DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id])
+}
+
+// ■■■ Page ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Page {
+  id           String   @id @default(cuid())
+  siteId       String
+  slug         String
+  title        String
+  status       Status   @default(DRAFT)
+  layoutConfig String   @db.Text // JSON: sezioni ordinate
+  metaTitle    String?
+  metaDesc     String?  @db.Text
+  ogImage      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  site   Site          @relation(fields: [siteId], references: [id])
+  blocks LayoutBlock[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, status])
+}
+
+// ■■■ LayoutBlock ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model LayoutBlock {
+  id      String @id @default(cuid())
+  pageId  String
+  type    String // hero | text | image | quote | stats | cta | map
+  order   Int
+  content String @db.Text // JSON con dati specifici del blocco
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId, order])
+}
+
+// ■■■ Category ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Category {
+  id     String @id @default(cuid())
+  siteId String
+  name   String
+  slug   String
+  color  String @default("#c9a84c")
+
+  projects Project[]
+  site     Site      @relation(fields: [siteId], references: [id])
+
+  @@unique([siteId, slug])
+}
+
+// ■■■ Project (Gallery) ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Project {
+  id         String   @id @default(cuid())
+  siteId     String
+  title      String
+  slug       String
+  excerpt    String?  @db.Text
+  body       String?  @db.LongText
+  status     Status   @default(DRAFT)
+  depth      Depth    @default(CARD)
+  order      Int      @default(0)
+  categoryId String?
+  coverId    String?
+  year       Int?
+  client     String?
+  tags       String? // CSV
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  site     Site          @relation(fields: [siteId], references: [id])
+  category Category?     @relation(fields: [categoryId], references: [id])
+  media    ProjectMedia[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, status, order])
+}
+
+model ProjectMedia {
+  projectId String
+  mediaId   String
+  order     Int    @default(0)
+  role      String @default("gallery") // cover | gallery | detail
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id])
+
+  @@id([projectId, mediaId])
+  @@index([projectId, order])
+}
+
+// ■■■ CaseHistory ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model CaseHistory {
+  id         String   @id @default(cuid())
+  siteId     String
+  title      String
+  slug       String
+  brief      String?  @db.Text
+  challenge  String?  @db.Text
+  approach   String?  @db.Text
+  solution   String?  @db.Text
+  results    String?  @db.Text
+  status     Status   @default(DRAFT)
+  coverId    String?
+  projectId  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  site Site      @relation(fields: [siteId], references: [id])
+  kpis CaseKPI[]
+
+  @@unique([siteId, slug])
+  @@index([siteId, status])
+}
+
+model CaseKPI {
+  id     String  @id @default(cuid())
+  caseId String
+  label  String
+  value  String
+  delta  String? // es: "+28%"
+  unit   String? // es: "conversioni"
+  order  Int     @default(0)
+
+  case CaseHistory @relation(fields: [caseId], references: [id], onDelete: Cascade)
+}
+
+// ■■■ Service ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Service {
+  id          String       @id @default(cuid())
+  siteId      String
+  title       String
+  slug        String
+  icon        String? // nome icona Tabler
+  descShort   String?      @db.Text
+  descLong    String?      @db.LongText
+  level       ServiceLevel @default(L1_CARD)
+  parentId    String?
+  order       Int          @default(0)
+  accentColor String?
+  status      Status       @default(DRAFT)
+
+  site     Site      @relation(fields: [siteId], references: [id])
+  parent   Service?  @relation("ServiceChildren", fields: [parentId], references: [id])
+  children Service[] @relation("ServiceChildren")
+
+  @@unique([siteId, slug])
+  @@index([siteId, parentId])
+}
+
+// ■■■ Media ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model Media {
+  id        String    @id @default(cuid())
+  siteId    String
+  filename  String
+  url       String
+  thumbUrl  String?
+  type      MediaType @default(IMAGE)
+  alt       String?
+  width     Int?
+  height    Int?
+  size      Int? // bytes
+  mimeType  String?
+  tags      String? // CSV
+  folderId  String?
+  createdAt DateTime  @default(now())
+
+  site     Site           @relation(fields: [siteId], references: [id])
+  projects ProjectMedia[]
+
+  @@index([siteId, type])
+}
+
+// ■■■ GalleryConfig ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model GalleryConfig {
+  id           String        @id @default(cuid())
+  siteId       String        @unique
+  layoutType   GalleryLayout @default(GRID)
+  cols         Int           @default(3)
+  hasFilters   Boolean       @default(true)
+  hasLightbox  Boolean       @default(true)
+  defaultDepth Depth         @default(CARD)
+
+  site Site @relation(fields: [siteId], references: [id])
+}

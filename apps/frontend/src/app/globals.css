@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/*
+  Tema PHILO — valori di default (Dark Luxury).
+  Questi vengono sovrascritti a runtime dal ThemeProvider
+  con i valori salvati nel DB per il sito corrente.
+*/
+@theme {
+  --color-primary: #0a0a0a;
+  --color-secondary: #f5f2ed;
+  --color-accent: #c9a84c;
+  --color-bg: #0a0a0a;
+  --color-text: #f5f2ed;
+
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+
+  --spacing-section: 6rem;
+  --spacing-container: 1.5rem;
+  --radius-card: 0.5rem;
+}
+
+/* Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+}
+
+/* Focus ring accessibile */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Utilità custom PHILO */
+@layer utilities {
+  .ph-section {
+    padding-block: var(--spacing-section);
+  }
+
+  .ph-container {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: var(--spacing-container);
+  }
+
+  .ph-container-narrow {
+    width: 100%;
+    max-width: 800px;
+    margin-inline: auto;
+    padding-inline: var(--spacing-container);
+  }
+
+  .ph-card {
+    border-radius: var(--radius-card);
+    background-color: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 12%, transparent);
+  }
+
+  .ph-heading-xl {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .ph-heading-lg {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .ph-heading-md {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 600;
+  }
+}

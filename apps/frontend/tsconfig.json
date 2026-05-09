@@ -1,0 +1,11 @@
+{
+  "extends": "@philo/config/typescript/nextjs",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@philo/ui": ["../../packages/ui/src/index.ts"],
+      "@philo/types": ["../../packages/types/src/index.ts"]
+    }
+  }
+}
