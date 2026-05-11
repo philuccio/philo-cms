@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
-import { getSiteConfig } from '@/app/actions/layout'
+import { getSiteConfig } from '@/app/actions/site-config'
 import { HeroSection } from '@/components/public/HeroSection'
 import { ProjectsPreview } from '@/components/public/ProjectsPreview'
 import { ServicesPreview } from '@/components/public/ServicesPreview'

@@ -16,8 +16,8 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { SiteConfigData, NavItem, FooterColumn } from '@/app/actions/layout'
-import { saveSiteConfig } from '@/app/actions/layout'
+import type { SiteConfigData, NavItem, FooterColumn } from '@/app/actions/site-config'
+import { saveSiteConfig } from '@/app/actions/site-config'
 
 type Tab = 'siteinfo' | 'nav' | 'footer' | 'seo'
 

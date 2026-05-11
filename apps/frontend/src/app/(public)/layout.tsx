@@ -1,5 +1,5 @@
 import { getTheme } from '@/app/actions/theme'
-import { getSiteConfig } from '@/app/actions/layout'
+import { getSiteConfig } from '@/app/actions/site-config'
 import { prisma } from '@/lib/prisma'
 import { LenisProvider } from '@/components/public/LenisProvider'
 import { ThemeProvider } from '@/components/public/ThemeProvider'

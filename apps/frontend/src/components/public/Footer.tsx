@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { FooterConfig } from '@/app/actions/layout'
+import type { FooterConfig } from '@/app/actions/site-config'
 
 interface FooterProps {
   logoUrl: string | null

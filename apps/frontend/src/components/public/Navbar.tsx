@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import type { NavItem } from '@/app/actions/layout'
+import type { NavItem } from '@/app/actions/site-config'
 
 interface NavbarProps {
   logoUrl: string | null
