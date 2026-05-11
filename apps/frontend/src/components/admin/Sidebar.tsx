@@ -42,17 +42,32 @@ export function Sidebar({ userName }: SidebarProps) {
 
   return (
     <aside
-      className={`border-[--color-text]/10 relative flex h-screen flex-shrink-0 flex-col border-r bg-[--color-sidebar] transition-all duration-200 ${
+      style={{
+        backgroundColor: 'var(--color-sidebar)',
+        borderColor: 'color-mix(in srgb, var(--color-text) 10%, transparent)',
+      }}
+      className={`relative flex h-screen flex-shrink-0 flex-col border-r transition-all duration-200 ${
         sidebarCollapsed ? 'w-14' : 'w-52'
       }`}
     >
       {/* Brand */}
-      <div className="border-[--color-text]/10 flex h-14 items-center border-b px-4">
-        <span className="text-lg font-[--font-display] font-semibold tracking-widest text-[--color-accent]">
+      <div
+        style={{ borderColor: 'color-mix(in srgb, var(--color-text) 10%, transparent)' }}
+        className="flex h-14 items-center border-b px-4"
+      >
+        <span
+          style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-display)' }}
+          className="text-lg font-semibold tracking-widest"
+        >
           {sidebarCollapsed ? 'P' : 'PHILO'}
         </span>
         {!sidebarCollapsed && (
-          <span className="text-[--color-text]/30 ml-2 text-[10px] tracking-widest">CMS</span>
+          <span
+            style={{ color: 'color-mix(in srgb, var(--color-text) 30%, transparent)' }}
+            className="ml-2 text-[10px] tracking-widest"
+          >
+            CMS
+          </span>
         )}
       </div>
 
@@ -65,10 +80,17 @@ export function Sidebar({ userName }: SidebarProps) {
               key={href}
               href={href}
               title={sidebarCollapsed ? label : undefined}
-              className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+              style={
                 active
-                  ? 'bg-[--color-accent]/10 border-r-2 border-[--color-accent] text-[--color-accent]'
-                  : 'text-[--color-text]/50 hover:bg-[--color-text]/5 hover:text-[--color-text]'
+                  ? {
+                      color: 'var(--color-accent)',
+                      backgroundColor: 'color-mix(in srgb, var(--color-accent) 10%, transparent)',
+                      borderRightColor: 'var(--color-accent)',
+                    }
+                  : { color: 'color-mix(in srgb, var(--color-text) 60%, transparent)' }
+              }
+              className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                active ? 'border-r-2' : 'hover:opacity-100'
               }`}
             >
               <Icon size={18} stroke={1.5} />
@@ -80,8 +102,16 @@ export function Sidebar({ userName }: SidebarProps) {
 
       {/* User initials */}
       {!sidebarCollapsed && (
-        <div className="border-[--color-text]/10 border-t px-4 py-3">
-          <p className="text-[--color-text]/30 truncate text-[11px]">{userName}</p>
+        <div
+          style={{ borderColor: 'color-mix(in srgb, var(--color-text) 10%, transparent)' }}
+          className="border-t px-4 py-3"
+        >
+          <p
+            style={{ color: 'color-mix(in srgb, var(--color-text) 40%, transparent)' }}
+            className="truncate text-[11px]"
+          >
+            {userName}
+          </p>
         </div>
       )}
 
@@ -89,7 +119,12 @@ export function Sidebar({ userName }: SidebarProps) {
       <button
         onClick={toggleSidebar}
         title={sidebarCollapsed ? 'Espandi sidebar' : 'Riduci sidebar'}
-        className="border-[--color-text]/15 text-[--color-text]/40 absolute -right-3 top-16 flex h-6 w-6 items-center justify-center rounded-full border bg-[--color-sidebar] transition-colors hover:text-[--color-text]"
+        style={{
+          backgroundColor: 'var(--color-sidebar)',
+          borderColor: 'color-mix(in srgb, var(--color-text) 15%, transparent)',
+          color: 'color-mix(in srgb, var(--color-text) 40%, transparent)',
+        }}
+        className="absolute -right-3 top-16 flex h-6 w-6 items-center justify-center rounded-full border transition-colors"
       >
         {sidebarCollapsed ? <IconChevronRight size={12} /> : <IconChevronLeft size={12} />}
       </button>

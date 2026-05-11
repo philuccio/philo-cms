@@ -1,7 +1,7 @@
-export default function AdminSettingsPage() {
-  return (
-    <div className="p-8">
-      <h1 className="ph-heading-md">Impostazioni</h1>
-    </div>
-  )
+import { getSiteConfig } from '@/app/actions/layout'
+import { LayoutBuilder } from '@/components/admin/layout/LayoutBuilder'
+
+export default async function AdminSettingsPage() {
+  const config = await getSiteConfig()
+  return <LayoutBuilder initialConfig={config} />
 }

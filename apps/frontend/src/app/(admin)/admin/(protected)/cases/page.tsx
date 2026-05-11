@@ -1,7 +1,7 @@
-export default function AdminCasesPage() {
-  return (
-    <div className="p-8">
-      <h1 className="ph-heading-md">Case History</h1>
-    </div>
-  )
+import { getCaseStudies } from '@/app/actions/cases'
+import { CasesClient } from '@/components/admin/cases/CasesClient'
+
+export default async function AdminCasesPage() {
+  const items = await getCaseStudies()
+  return <CasesClient initialItems={items} />
 }

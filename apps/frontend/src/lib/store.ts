@@ -16,6 +16,6 @@ export const useUIStore = create<UIStore>()(
       toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
       toggleDarkMode: () => set((s) => ({ darkMode: !s.darkMode })),
     }),
-    { name: 'philo-ui-v2' },
+    { name: 'philo-ui-v3' },
   ),
 )

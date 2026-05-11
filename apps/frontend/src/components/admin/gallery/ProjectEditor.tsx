@@ -88,12 +88,14 @@ export function ProjectEditor({ project, categories }: Props) {
     })
   }
 
-  const handleAddGallery = (media: Media) => {
+  const handleAddGallery = (medias: Media[]) => {
     startTransition(async () => {
       try {
-        await addProjectMedia(project.id, media.id, 'gallery')
+        await Promise.all(medias.map((m) => addProjectMedia(project.id, m.id, 'gallery')))
         router.refresh()
-        toast.success('Immagine aggiunta')
+        toast.success(
+          medias.length === 1 ? 'Immagine aggiunta' : `${medias.length} immagini aggiunte`,
+        )
       } catch {
         toast.error('Errore')
       }
@@ -420,7 +422,12 @@ export function ProjectEditor({ project, categories }: Props) {
         <MediaPickerModal onSelect={handleAddCover} onClose={() => setShowCoverPicker(false)} />
       )}
       {showGalleryPicker && (
-        <MediaPickerModal onSelect={handleAddGallery} onClose={() => setShowGalleryPicker(false)} />
+        <MediaPickerModal
+          multiple
+          onSelect={() => {}}
+          onSelectMultiple={handleAddGallery}
+          onClose={() => setShowGalleryPicker(false)}
+        />
       )}
     </div>
   )

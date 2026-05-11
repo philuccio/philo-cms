@@ -22,15 +22,29 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
       .slice(0, 2)
       .join('') ?? 'A'
 
+  const muted = 'color-mix(in srgb, var(--color-text) 40%, transparent)'
+  const border = 'color-mix(in srgb, var(--color-text) 10%, transparent)'
+
   return (
-    <header className="border-[--color-text]/10 flex h-14 flex-shrink-0 items-center gap-4 border-b bg-[--color-sidebar] px-6">
+    <header
+      style={{ backgroundColor: 'var(--color-sidebar)', borderColor: border }}
+      className="flex h-14 flex-shrink-0 items-center gap-4 border-b px-6"
+    >
       {/* Search */}
-      <div className="border-[--color-text]/10 bg-[--color-text]/5 text-[--color-text]/40 focus-within:border-[--color-accent]/50 flex flex-1 items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors focus-within:text-[--color-text]">
+      <div
+        style={{
+          borderColor: border,
+          backgroundColor: 'color-mix(in srgb, var(--color-text) 5%, transparent)',
+          color: muted,
+        }}
+        className="flex flex-1 items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors"
+      >
         <IconSearch size={15} stroke={1.5} />
         <input
           type="text"
           placeholder="Cerca contenuti…"
-          className="placeholder:text-[--color-text]/30 flex-1 bg-transparent text-sm text-[--color-text] focus:outline-none"
+          style={{ color: 'var(--color-text)' }}
+          className="flex-1 bg-transparent text-sm focus:outline-none"
         />
       </div>
 
@@ -40,7 +54,8 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
         <button
           onClick={toggleDarkMode}
           title={darkMode ? 'Passa a light mode' : 'Passa a dark mode'}
-          className="text-[--color-text]/40 hover:bg-[--color-text]/8 flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:text-[--color-text]"
+          style={{ color: muted }}
+          className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
         >
           {darkMode ? <IconSun size={17} stroke={1.5} /> : <IconMoon size={17} stroke={1.5} />}
         </button>
@@ -48,7 +63,8 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
         {/* Notifications */}
         <button
           title="Notifiche"
-          className="text-[--color-text]/40 hover:bg-[--color-text]/8 relative flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:text-[--color-text]"
+          style={{ color: muted }}
+          className="relative flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
         >
           <IconBell size={17} stroke={1.5} />
         </button>
@@ -57,7 +73,11 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
         <div className="relative">
           <button
             onClick={() => setUserMenuOpen((o) => !o)}
-            className="bg-[--color-accent]/20 hover:bg-[--color-accent]/30 ml-1 flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold text-[--color-accent] transition-colors"
+            style={{
+              backgroundColor: 'color-mix(in srgb, var(--color-accent) 20%, transparent)',
+              color: 'var(--color-accent)',
+            }}
+            className="ml-1 flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-colors"
           >
             {initials}
           </button>
@@ -65,16 +85,27 @@ export function AdminHeader({ userName, userRole }: AdminHeaderProps) {
           {userMenuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-              <div className="border-[--color-text]/10 absolute right-0 top-10 z-20 w-52 rounded-lg border bg-[--color-sidebar] py-1 shadow-xl">
-                <div className="border-[--color-text]/10 border-b px-4 py-2.5">
-                  <p className="truncate text-sm font-medium text-[--color-text]">{userName}</p>
-                  <p className="text-[--color-text]/40 text-xs">{userRole}</p>
+              <div
+                style={{ backgroundColor: 'var(--color-sidebar)', borderColor: border }}
+                className="absolute right-0 top-10 z-20 w-52 rounded-lg border py-1 shadow-xl"
+              >
+                <div style={{ borderColor: border }} className="border-b px-4 py-2.5">
+                  <p
+                    style={{ color: 'var(--color-text)' }}
+                    className="truncate text-sm font-medium"
+                  >
+                    {userName}
+                  </p>
+                  <p style={{ color: muted }} className="text-xs">
+                    {userRole}
+                  </p>
                 </div>
                 <button
                   onClick={() => {
                     void signOut({ callbackUrl: '/admin/login' })
                   }}
-                  className="text-[--color-text]/60 flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-red-500/10 hover:text-red-400"
+                  style={{ color: 'color-mix(in srgb, var(--color-text) 60%, transparent)' }}
+                  className="flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors hover:bg-red-500/10 hover:text-red-400"
                 >
                   <IconLogout size={15} stroke={1.5} />
                   Esci

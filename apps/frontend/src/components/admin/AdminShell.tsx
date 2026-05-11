@@ -21,8 +21,9 @@ export function AdminShell({ children, userName, userRole }: AdminShellProps) {
 
   return (
     <div
-      data-theme={mounted ? (darkMode ? 'dark' : 'light') : 'light'}
-      className="flex h-screen overflow-hidden bg-[--color-bg]"
+      data-theme={mounted && darkMode ? 'dark' : undefined}
+      className="flex h-screen overflow-hidden"
+      style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
     >
       <Sidebar userName={userName} />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">

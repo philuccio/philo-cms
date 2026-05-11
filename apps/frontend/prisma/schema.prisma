@@ -67,6 +67,7 @@ model Site {
   media         Media[]
   galleryConfig GalleryConfig?
   categories    Category[]
+  siteConfig    SiteConfig?
 }
 
 // ■■■ User ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -212,14 +213,29 @@ model CaseHistory {
   status     Status   @default(DRAFT)
   coverId    String?
   projectId  String?
+  order      Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  site Site      @relation(fields: [siteId], references: [id])
-  kpis CaseKPI[]
+  site  Site        @relation(fields: [siteId], references: [id])
+  kpis  CaseKPI[]
+  media CaseMedia[]
 
   @@unique([siteId, slug])
   @@index([siteId, status])
+}
+
+model CaseMedia {
+  caseId  String
+  mediaId String
+  order   Int     @default(0)
+  caption String?
+
+  case  CaseHistory @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  media Media       @relation(fields: [mediaId], references: [id])
+
+  @@id([caseId, mediaId])
+  @@index([caseId, order])
 }
 
 model CaseKPI {
@@ -248,6 +264,7 @@ model Service {
   parentId    String?
   order       Int          @default(0)
   accentColor String?
+  coverId     String?
   status      Status       @default(DRAFT)
 
   site     Site      @relation(fields: [siteId], references: [id])
@@ -278,8 +295,25 @@ model Media {
 
   site     Site           @relation(fields: [siteId], references: [id])
   projects ProjectMedia[]
+  cases    CaseMedia[]
 
   @@index([siteId, type])
+}
+
+// ■■■ SiteConfig ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+model SiteConfig {
+  id         String   @id @default(cuid())
+  siteId     String   @unique
+  logoUrl    String?
+  faviconUrl String?
+  seoTitle   String?
+  seoDesc    String?  @db.Text
+  seoOgImage String?
+  navJson    String?  @db.Text  // JSON: NavItem[]
+  footerJson String?  @db.Text  // JSON: FooterConfig
+
+  site Site @relation(fields: [siteId], references: [id])
 }
 
 // ■■■ GalleryConfig ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
